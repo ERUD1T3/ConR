@@ -27,7 +27,7 @@ mkdir -p logs
 SEEDS="456789 42 123 0 9999"
 DATASET="sep"
 BATCH_SIZE=200
-EPOCHS=5700
+EPOCHS=5602
 MLP_HIDDENS="512 32 256 32 128 32 64 32"
 MLP_EMBED_DIM=32
 MLP_DROPOUT=0.5
@@ -39,7 +39,7 @@ WEIGHT_DECAY=1
 REGULARIZATION_WEIGHT=0.1  # Weight of the ranking regularization term
 INTERPOLATION_LAMBDA=1.0   # Interpolation strength for ranking regularization
 
-DATA_DIR="/home1/jmoukpe2016/CONR/sources/data"
+DATA_DIR="/home1/jmoukpe2016/BalancedMSE/neurips2025/data"
 UPPER_THRESHOLD=2.30258509299
 
 # --- Run Training ---
@@ -48,7 +48,6 @@ echo "Using RankSim regularization with weight: ${REGULARIZATION_WEIGHT}"
 echo "Interpolation lambda: ${INTERPOLATION_LAMBDA}"
 echo "=================================="
 
-cd neurips2025
 
 srun python train.py \
     --seeds ${SEEDS} \

@@ -27,7 +27,7 @@ mkdir -p logs
 SEEDS="456789 42 123 0 9999"
 DATASET="sep"
 BATCH_SIZE=200
-EPOCHS=5700
+EPOCHS=5602
 MLP_HIDDENS="512 32 256 32 128 32 64 32"
 MLP_EMBED_DIM=32
 MLP_DROPOUT=0.5
@@ -41,7 +41,7 @@ CONR_W=1           # Similarity window for ConR loss
 CONR_T=0.07        # Temperature parameter for ConR
 CONR_E=0.01        # Coefficient for eta in ConR
 
-DATA_DIR="/home1/jmoukpe2016/CONR/sources/data"
+DATA_DIR="/home1/jmoukpe2016/BalancedMSE/neurips2025/data"
 UPPER_THRESHOLD=2.30258509299
 
 # --- Run Training ---
@@ -49,7 +49,6 @@ echo "Starting training for dataset: ${DATASET}, seeds: ${SEEDS}"
 echo "Using ConR regularization with beta: ${CONR_BETA}, w: ${CONR_W}, t: ${CONR_T}, e: ${CONR_E}"
 echo "=================================="
 
-cd neurips2025
 
 srun python train.py \
     --seeds ${SEEDS} \

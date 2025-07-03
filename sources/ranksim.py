@@ -52,8 +52,6 @@ def batchwise_ranking_regularizer(
         - Feature similarities are computed using normalized cosine similarity
         - Label similarities are based on absolute differences (closer labels = higher similarity)
     """
-    loss = torch.tensor(0.0, device=features.device, requires_grad=True)
-
     # Reduce ties and boost relative representation of infrequent labels by computing the 
     # regularizer over a subset of the batch in which each label appears at most once
     batch_unique_targets = torch.unique(targets)
@@ -79,11 +77,14 @@ def batchwise_ranking_regularizer(
     x_normalized = F.normalize(x.view(x.size(0), -1), dim=1)  # L2 normalize features
     xxt = torch.matmul(x_normalized, x_normalized.permute(1, 0))  # Cosine similarity matrix
 
+    # Collect individual losses to avoid in-place operations on leaf variables
+    losses = []
+    
     # Compute ranking similarity loss by comparing feature and label rank structures
     for i in range(len(y)):
         # Compute label-based ranking: samples with similar labels should have higher ranks
         # Use negative absolute difference so that smaller differences = higher similarities
-        label_similarities = -torch.abs(y[i] - y).transpose(0,1)  # Shape: (num_samples,)
+        label_similarities = -torch.abs(y[i] - y).unsqueeze(0)  # Shape: (1, num_samples)
         label_ranks = rank_normalised(label_similarities)  # Normalize to [0,1]
         
         # Compute feature-based ranking using differentiable ranking
@@ -92,6 +93,7 @@ def batchwise_ranking_regularizer(
         
         # Minimize MSE between feature ranks and label ranks
         # This encourages feature similarities to match label similarities
-        loss += F.mse_loss(feature_ranks, label_ranks)
+        losses.append(F.mse_loss(feature_ranks, label_ranks))
     
-    return loss
+    # Sum all losses (avoids in-place operations on leaf variables)
+    return sum(losses) if losses else torch.tensor(0.0, device=features.device, requires_grad=True)

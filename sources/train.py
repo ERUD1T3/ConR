@@ -6,7 +6,7 @@ from tqdm import tqdm
 from collections import defaultdict
 from scipy.stats import gmean
 from typing import Dict, Tuple, Optional, Union
-from loss import GAILoss, BMCLoss, BNILoss
+from balanaced_mse import GAILoss, BMCLoss, BNILoss
 
 import torch
 import torch.nn as nn
